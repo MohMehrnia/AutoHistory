@@ -19,7 +19,8 @@ namespace Microsoft.EntityFrameworkCore.AutoHistory.Test
                             Title = "xUnit",
                             Content = "Post from xUnit test."
                         }
-                    }
+                    },
+                    PrivateURL = "http://www.secret.com"
                 });
                 db.EnsureAutoHistory(() => new CustomAutoHistory()
                 {
@@ -45,7 +46,8 @@ namespace Microsoft.EntityFrameworkCore.AutoHistory.Test
                             Title = "xUnit",
                             Content = "Post from xUnit test."
                         }
-                    }
+                    },
+                    PrivateURL = "http://www.secret.com"
                 };
                 db.Attach(blog);
                 db.SaveChanges();

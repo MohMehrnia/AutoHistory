@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Arch team. All rights reserved.
 
 using System;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Internal;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Microsoft.EntityFrameworkCore
 {
@@ -19,13 +18,15 @@ namespace Microsoft.EntityFrameworkCore
         /// </summary>
         /// <param name="modelBuilder">The <see cref="ModelBuilder"/> to enable auto history feature.</param>
         /// <param name="changedMaxLength">The maximum length of the 'Changed' column. <c>null</c> will use default setting 2048.</param>
+        /// <param name="JsonSerializerOptions">The json setting for the 'Changed' column</param>
         /// <returns>The <see cref="ModelBuilder"/> had enabled auto history feature.</returns>
-        public static ModelBuilder EnableAutoHistory(this ModelBuilder modelBuilder, int? changedMaxLength)
+        public static ModelBuilder EnableAutoHistory(this ModelBuilder modelBuilder, int? changedMaxLength = null, JsonSerializerOptions JsonSerializerOptions = null)
         {
             return ModelBuilderExtensions.EnableAutoHistory<AutoHistory>(modelBuilder, o =>
             {
                 o.ChangedMaxLength = changedMaxLength;
                 o.LimitChangedLength = false;
+                o.JsonSerializerOptions = JsonSerializerOptions;
             });
         }
 
@@ -34,7 +35,6 @@ namespace Microsoft.EntityFrameworkCore
         {
             var options = AutoHistoryOptions.Instance;
             configure?.Invoke(options);
-            options.JsonSerializer = JsonSerializer.Create(options.JsonSerializerSettings);
 
             modelBuilder.Entity<TAutoHistory>(b =>
             {
